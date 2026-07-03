@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+*{
+  margin:0;
+    padding:0;
+      box-sizing:border-box;
+      }
+
+      html{
+        scroll-behavior:smooth;
+        }
+
+        body{
+          background:#040816;
+            color:white;
+              font-family:Arial,Helvetica,sans-serif;
+              }
+
+              a{
+                text-decoration:none;
+                  color:inherit;
+                  }
+
+                  button{
+                    cursor:pointer;
+                      transition:.25s;
+                      }
+
+                      img{
+                        user-select:none;
+                        }
+
+                        ::-webkit-scrollbar{
+                          width:8px;
+                          }
+
+                          ::-webkit-scrollbar-thumb{
+                            background:#14c8ff;
+                              border-radius:20px;
+                              }
