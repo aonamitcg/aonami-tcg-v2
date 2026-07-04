@@ -1,6 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
+
 import { CartProvider } from "../contexts/CartContext";
+import { AuthProvider } from "../contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "AONAMI TCG",
@@ -15,10 +17,12 @@ export const metadata: Metadata = {
           return (
               <html lang="fr">
                     <body>
-                      <CartProvider>
-                          {children}
-                            </CartProvider>
-                            </body>
-                        </html>
-                          );
-                          }
+                            <AuthProvider>
+                                      <CartProvider>
+                                                  {children}
+                                                            </CartProvider>
+                                                                    </AuthProvider>
+                                                                          </body>
+                                                                              </html>
+                                                                                );
+                                                                                }

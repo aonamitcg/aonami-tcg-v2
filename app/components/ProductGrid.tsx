@@ -1,57 +1,96 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import ProductCard from "./ProductCard";
-import { products } from "../../data/products";
+import { getProducts, Product } from "../../lib/products";
 
 type ProductGridProps = {
-  category?: string;
-  };
+  search?: string;
+    category?: string;
+    };
 
-  export default function ProductGrid({
-    category,
-    }: ProductGridProps) {
-      const filteredProducts = category
-          ? products.filter(
-                  (product) => product.category === category
-                        )
-                            : products;
+    export default function ProductGrid({
+      search = "",
+        category,
+        }: ProductGridProps) {
+          const [products, setProducts] = useState<Product[]>([]);
+            const [loading, setLoading] = useState(true);
 
-                              return (
-                                  <section className="max-w-7xl mx-auto px-6 py-20">
+              useEffect(() => {
+                  async function load() {
+                        const data = await getProducts();
+                              setProducts(data);
+                                    setLoading(false);
+                                        }
 
-                                        <div className="flex items-center justify-between mb-10">
+                                            load();
+                                              }, []);
 
-                                                <div>
+                                                const filteredProducts = products.filter((product) => {
+                                                    const matchesSearch =
+                                                          product.title
+                                                                  .toLowerCase()
+                                                                          .includes(search.toLowerCase()) ||
+                                                                                product.category
+                                                                                        .toLowerCase()
+                                                                                                .includes(search.toLowerCase());
 
-                                                          <p className="uppercase tracking-[6px] text-cyan-400">
-                                                                      Boutique
-                                                                                </p>
+                                                                                                    const matchesCategory =
+                                                                                                          !category ||
+                                                                                                                category === "all" ||
+                                                                                                                      product.category === category;
 
-                                                                                          <h2 className="text-4xl lg:text-5xl font-black mt-2">
-                                                                                                      Produits populaires
-                                                                                                                </h2>
+                                                                                                                          return matchesSearch && matchesCategory;
+                                                                                                                            });
 
-                                                                                                                        </div>
+                                                                                                                              if (loading) {
+                                                                                                                                  return (
+                                                                                                                                        <section className="py-20 text-center text-white">
+                                                                                                                                                Chargement des produits...
+                                                                                                                                                      </section>
+                                                                                                                                                          );
+                                                                                                                                                            }
 
-                                                                                                                                <p className="text-gray-400">
-                                                                                                                                          {filteredProducts.length} produit(s)
-                                                                                                                                                  </p>
+                                                                                                                                                              return (
+                                                                                                                                                                  <section className="max-w-7xl mx-auto px-6 py-20">
 
-                                                                                                                                                        </div>
+                                                                                                                                                                        <div className="flex items-center justify-between mb-10">
 
-                                                                                                                                                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                                                                                                                                                                <div>
 
-                                                                                                                                                                      {filteredProducts.map((product) => (
-                                                                                                                                                                                <ProductCard
-                                                                                                                                                                                            key={product.id}
-                                                                                                                                                                                                        id={product.id}
-                                                                                                                                                                                                                    title={product.title}
-                                                                                                                                                                                                                                price={product.price}
-                                                                                                                                                                                                                                            image={product.image}
-                                                                                                                                                                                                                                                        badge={product.badge}
-                                                                                                                                                                                                                                                                  />
-                                                                                                                                                                                                                                                                          ))}
+                                                                                                                                                                                          <p className="uppercase tracking-[6px] text-cyan-400">
+                                                                                                                                                                                                      Boutique
+                                                                                                                                                                                                                </p>
 
-                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                          <h2 className="text-5xl font-black mt-2">
+                                                                                                                                                                                                                                      Produits
+                                                                                                                                                                                                                                                </h2>
 
-                                                                                                                                                                                                                                                                                    </section>
-                                                                                                                                                                                                                                                                                      );
-                                                                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                                        </div>
+
+                                                                                                                                                                                                                                                                <p className="text-gray-400">
+                                                                                                                                                                                                                                                                          {filteredProducts.length} produit(s)
+                                                                                                                                                                                                                                                                                  </p>
+
+                                                                                                                                                                                                                                                                                        </div>
+
+                                                                                                                                                                                                                                                                                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                                                                                                                                                                                                                                                                                                      {filteredProducts.map((product) => (
+                                                                                                                                                                                                                                                                                                                <ProductCard
+                                                                                                                                                                                                                                                                                                                            key={product.id}
+                                                                                                                                                                                                                                                                                                                                        id={Number(product.id)}
+                                                                                                                                                                                                                                                                                                                                                    title={product.title}
+                                                                                                                                                                                                                                                                                                                                                                price={product.price}
+                                                                                                                                                                                                                                                                                                                                                                            image={product.image}
+                                                                                                                                                                                                                                                                                                                                                                                        badge={product.badge}
+                                                                                                                                                                                                                                                                                                                                                                                                    stock={product.stock}
+                                                                                                                                                                                                                                                                                                                                                                                                              />
+                                                                                                                                                                                                                                                                                                                                                                                                                      ))}
+
+                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                </section>
+                                                                                                                                                                                                                                                                                                                                                                                                                                  );
+                                                                                                                                                                                                                                                                                                                                                                                                                                  }
